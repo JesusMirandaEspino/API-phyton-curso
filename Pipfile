@@ -12,3 +12,7 @@ pydantic = "*"
 
 [requires]
 python_version = "3.10"
+
+
+[scripts]
+api = "uvicorn api:app --reload"
