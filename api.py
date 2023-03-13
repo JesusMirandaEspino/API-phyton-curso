@@ -37,4 +37,13 @@ async def clientes():
     headers = {"content-type": "charset=utf-8"}
     return JSONResponse(content=content, headers=headers)
 
+
+@app.get("/clientes/buscar/{dni}/")
+async def clientes_buscar(dni: str):
+    cliente = db.Clientes.buscar(dni=dni)
+    headers = {"content-type": "charset=utf-8"}
+    return JSONResponse(content=cliente.to_dict(), headers=headers)
+
+
+
 print("Servidor de la API...")
