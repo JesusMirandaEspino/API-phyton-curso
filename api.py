@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 from fastapi.responses import JSONResponse
 import database as db
 
@@ -41,9 +41,10 @@ async def clientes():
 @app.get("/clientes/buscar/{dni}/")
 async def clientes_buscar(dni: str):
     cliente = db.Clientes.buscar(dni=dni)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
     headers = {"content-type": "charset=utf-8"}
     return JSONResponse(content=cliente.to_dict(), headers=headers)
-
 
 
 print("Servidor de la API...")
