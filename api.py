@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Response
 from fastapi.responses import JSONResponse
+import database as db
 
 app = FastAPI()
 
@@ -26,5 +27,15 @@ def html():
     </html>
     """
     return Response(content=content, media_type="text/html")
+
+
+@app.get("/clientes/")
+async def clientes():
+    content = content = [
+        {'dni': cliente.dni, 'nombre': cliente.nombre, 'apellido': cliente.apellido}
+        for cliente in db.Clientes.lista
+    ]
+    headers = {"content-type": "charset=utf-8"}
+    return JSONResponse(content=content, headers=headers)
 
 print("Servidor de la API...")
