@@ -68,7 +68,7 @@ async def clientes_crear(datos: ModeloCrearCliente):
     cliente = db.Clientes.crear(datos.dni, datos.nombre, datos.apellido)
     if cliente:
         headers = {"content-type": "charset=utf-8"}
-        return JSONResponse(content=content.to_dict(), headers=headers)
+        return JSONResponse(content=cliente.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
 
 
