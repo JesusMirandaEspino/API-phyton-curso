@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Response, HTTPException
 from fastapi.responses import JSONResponse
 import database as db
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, constr, validator
+import helpers
 
 
 class ModeloCliente(BaseModel):
