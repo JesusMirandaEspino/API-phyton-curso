@@ -80,5 +80,14 @@ async def clientes_actualizar(datos: ModeloCliente):
         if cliente:
             return JSONResponse(content=cliente.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
+    
+
+@app.delete("/clientes/borrar/{dni}/")
+async def clientes_borrar(dni: str):
+    if db.Clientes.buscar(dni=dni):
+        cliente = db.Clientes.borrar(dni=dni)
+        return JSONResponse(content=cliente.to_dict(), headers=headers)
+    raise HTTPException(status_code=404)
+
 
 print("Servidor de la API...")
