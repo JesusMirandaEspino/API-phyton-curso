@@ -18,34 +18,15 @@ class ModeloCrearCliente(ModeloCliente):
             raise ValueError("Cliente ya existente o DNI incorrecto")
         return dni
 
-app = FastAPI()
+
+app = FastAPI(
+    title="API del Gestor de clientes",
+    description="Ofrece diferentes funciones para gestionar los clientes.")
 
 headers = {"content-type": "charset=utf-8"}
 
-@app.get("/")
-async def index():
-    content = {'mensaje': '¡Hola mundo!'}
-    return JSONResponse(content=content, headers=headers,  media_type="application/json")
 
-
-@app.get("/html/")
-def html():
-    content = """
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>¡Hola mundo!</title>
-    </head>
-    <body>
-        <h1>¡Hola mundo!</h1>
-    </body>
-    </html>
-    """
-    return Response(content=content, media_type="text/html")
-
-
-@app.get("/clientes/")
+@app.get("/clientes/",  tags=["Clientes"])
 async def clientes():
     content = content = [
         cliente.to_dict() for cliente in db.Clientes.lista
@@ -54,7 +35,7 @@ async def clientes():
     return JSONResponse(content=content, headers=headers)
 
 
-@app.get("/clientes/buscar/{dni}/")
+@app.get("/clientes/buscar/{dni}/", tags=["Clientes"])
 async def clientes_buscar(dni: str):
     cliente = db.Clientes.buscar(dni=dni)
     if not cliente:
@@ -63,7 +44,7 @@ async def clientes_buscar(dni: str):
     return JSONResponse(content=cliente.to_dict(), headers=headers)
 
 
-@app.post("/clientes/crear/")
+@app.post("/clientes/crear/", tags=["Clientes"])
 async def clientes_crear(datos: ModeloCrearCliente):
     cliente = db.Clientes.crear(datos.dni, datos.nombre, datos.apellido)
     if cliente:
@@ -72,7 +53,7 @@ async def clientes_crear(datos: ModeloCrearCliente):
     raise HTTPException(status_code=404)
 
 
-@app.put("/clientes/actualizar/")
+@app.put("/clientes/actualizar/", tags=["Clientes"])
 async def clientes_actualizar(datos: ModeloCliente):
     if db.Clientes.buscar(datos.dni):
         cliente = db.Clientes.modificar(
@@ -80,9 +61,9 @@ async def clientes_actualizar(datos: ModeloCliente):
         if cliente:
             return JSONResponse(content=cliente.to_dict(), headers=headers)
     raise HTTPException(status_code=404)
-    
 
-@app.delete("/clientes/borrar/{dni}/")
+
+@app.delete("/clientes/borrar/{dni}/", tags=["Clientes"])
 async def clientes_borrar(dni: str):
     if db.Clientes.buscar(dni=dni):
         cliente = db.Clientes.borrar(dni=dni)
