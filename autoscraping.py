@@ -1,3 +1,4 @@
+import os
 import csv
 import requests
 from bs4 import BeautifulSoup
@@ -158,3 +159,104 @@ class Citas:
 
 
 Citas.scrapear()
+
+
+class Citas:
+
+    # Variable de clase para almacenar las citas en la memoria
+    quotes = []
+
+    # Recuperamos las citas en la memoria si existe el fichero quotes.csv
+    if os.path.exists("quotes.csv"):
+        with open("quotes.csv", "r") as file:
+            data = csv.DictReader(file)
+            for quote in data:
+                # La lista es una cadena, hay que reevaluarla
+                quote['tags'] = eval(quote['tags'])
+                quotes.append(quote)
+
+    @staticmethod
+    def scrapear():
+        # Scrapeamos todas las citas, ponemos un límite pequeño para hacer pruebas
+        Citas.quotes = scrap_site(limit=2)
+        # Guardamos las citas scrapeadas en un fichero CSV volcándolas de la lista de dicts
+        with open("quotes.csv", "w") as file:
+            # Definimos el objeto para escribir con las cabeceras de los campos
+            writer = csv.DictWriter(
+                file, fieldnames=["text", "author", "tags"])
+            # Escribimos las cabeceras
+            writer.writeheader()
+            # Escribimos cada cita en la memoria en el fichero
+            for quote in Citas.quotes:
+                writer.writerow(quote)
+
+    @staticmethod
+    def listar(limite=10):
+        for quote in Citas.quotes[:limite]:
+            print(quote["text"])
+            print(quote["author"])
+            for tag in quote["tags"]:
+                print(tag, end=" ")
+            print("\n")
+
+Citas.listar(5)
+
+
+import os
+import csv
+
+class Citas:
+    
+    # Variable de clase para almacenar las citas en la memoria
+    quotes = []
+    
+    # Recuperamos las citas en la memoria si existe el fichero quotes.csv
+    if os.path.exists("quotes.csv"):
+        with open("quotes.csv", "r") as file:
+            data = csv.DictReader(file)
+            for quote in data:
+                # La lista es una cadena, hay que reevaluarla
+                quote['tags'] = eval(quote['tags'])
+                quotes.append(quote)
+    
+    @staticmethod
+    def scrapear():
+        # Scrapeamos todas las citas, ponemos un límite pequeño para hacer pruebas
+        Citas.quotes = scrap_site(limit=2)
+        # Guardamos las citas scrapeadas en un fichero CSV volcándolas de la lista de dicts
+        with open("quotes.csv", "w") as file:
+            writer = csv.DictWriter(file, fieldnames=["text", "author", "tags"])
+            writer.writeheader()
+            for quote in Citas.quotes:
+                writer.writerow(quote)
+            
+    @staticmethod
+    def listar(limite=10):
+        for quote in Citas.quotes[:limite]:
+            print(quote["text"])
+            print(quote["author"])
+            for tag in quote["tags"]:
+                print(tag, end=" ")
+            print("\n")
+
+    @staticmethod
+    def etiqueta(nombre=""):
+        for quote in Citas.quotes:
+            if nombre in quote["tags"]:
+                print(quote["text"])
+                print(quote["author"])
+                for tag in quote["tags"]:
+                    print(tag, end=" ")
+                print("\n")
+                
+    @staticmethod
+    def autor(nombre=""):
+        for quote in Citas.quotes:
+            if nombre == quote["author"]:
+                print(quote["text"])
+                print(quote["author"])
+                for tag in quote["tags"]:
+                    print(tag, end=" ")
+                print("\n")
+
+
