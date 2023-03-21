@@ -51,3 +51,19 @@ for tr_tag in tr_tags:
     if len(th_tags) > 0 and len(td_tags) > 0:
         print(
             f"{th_tags[0].getText().strip()}: {td_tags[0].getText().strip()}")
+
+
+img = soup.select(".infobox img")[0]
+
+print(img)
+
+
+print(img['src'])
+
+
+# Ponemos el protocolo https: delante porque el enlace no lo incluye
+response = requests.get(f"https:{img['src']}")
+
+if response.status_code == 200:
+    with open("image.png", 'wb') as f:
+        f.write(response.content)
